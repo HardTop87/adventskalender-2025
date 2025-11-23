@@ -24,20 +24,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- 1. ÜBERSETZUNGEN DEFINIEREN ---
     const TRANSLATIONS = {
         'site_title': {
-            'de': 'Mein Modern Adventskalender',
-            'en': 'My Modern Advent Calendar'
+            'de': 'Der CoCoCo Adventskalender',
+            'en': 'The CoCoCo Advent Calendar'
         },
         'default_content': {
-            'de': 'Herzlichen Glückwunsch! Du hast Türchen geöffnet.',
+            'de': 'Herzlichen Glückwunsch! Du hast ein Türchen geöffnet.',
             'en': 'Congratulations! You have opened a door.'
         },
         'locked_title': {
-            'de': 'Noch nicht geöffnet! 🔒',
+            'de': 'Noch nicht verfügbar! 🔒',
             'en': 'Not yet unlocked! 🔒'
         },
         'locked_wait': {
-            'de': 'Wir müssen uns noch etwas gedulden. Die Vorfreude ist doch das Schönste! 😊',
-            'en': 'We still have to be patient. The anticipation is the best part! 😊'
+            'de': 'Du musst dich noch etwas gedulden. Die Vorfreude ist doch das Schönste! 😊',
+            'en': 'You still have to be patient. The anticipation is the best part! 😊'
         },
         'month_name': {
             'de': 'November', 
