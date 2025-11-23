@@ -1,0 +1,217 @@
+/* Farbvariablen beibehalten */
+:root {
+    --holz-rahmen: #3e2723;
+    --tuer-gruen: #2c5950;
+    --nummern-schild: #ec407a;
+    --ungeoeffnet-filter: brightness(0.7); 
+}
+
+/* Grundlegende Stile */
+body {
+    font-family: sans-serif; 
+    background-color: #f7e0ed; 
+    display: flex;
+    /* NEU: Vertikales Layout, um den Switcher ÜBER dem Kalender zu zentrieren */
+    flex-direction: column; 
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* ------------------- NEU: Language Switcher Styles ------------------- */
+.language-switcher {
+    /* Positionierung auf zentriert gesetzt, da der Body jetzt flex-direction: column ist */
+    position: static; 
+    
+    /* NEU: Abstand UNTER dem Switcher zum Kalender */
+    margin-bottom: 20px; 
+    
+    z-index: 101; 
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 5px 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    
+    /* Stellt sicher, dass die Flaggen zentriert sind */
+    display: flex; 
+    align-items: center;
+}
+
+.flag-icon {
+    cursor: pointer;
+    font-size: 24px;
+    padding: 0 5px;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+}
+
+.flag-icon:hover {
+    opacity: 1;
+}
+
+.flag-icon.active {
+    opacity: 1; 
+    border-bottom: 2px solid var(--nummern-schild);
+}
+/* -------------------------------------------------------------------- */
+
+
+/* Kalender-Container */
+.adventskalender-container {
+    display: block; 
+    position: relative; 
+    
+    width: 70vh; 
+    height: 70vh;
+    max-width: 700px;
+    max-height: 700px;
+    
+    padding: 0; 
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    border: none;
+    overflow: hidden; 
+    
+    background-image: url('CoCoCo Advent.png'); 
+    background-size: contain; 
+    background-position: center; 
+    background-repeat: no-repeat; 
+}
+
+/* Stil für jedes einzelne Türchen */
+.tuer {
+    position: absolute; 
+    background-color: transparent; 
+    border: none; 
+    opacity: 1; 
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    overflow: hidden; 
+    transition: opacity 0.3s ease-in-out, filter 0.3s;
+}
+
+/* HTML-Zahlen UNSICHTBAR */
+.tuer-nummer {
+    opacity: 0; 
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 20; 
+}
+
+/* KRANZ/GRIFF entfernt */
+.tuer::before, 
+.tuer::after {
+    content: none; 
+}
+
+/* --- ABSOLUTE POSITIONIERUNG DER 24 TÜRCCHEN (DEINE WERTE) --- */
+
+#tuer-1 { top: 31.3%; left: 8.4%; width: 27.5%; height: 16.6%; } 
+#tuer-2 { top: 45.6%; left: 75.2%; width: 16.2%; height: 11.6%; } 
+#tuer-3 { top: 67.3%; left: 8.4%; width: 12.8%; height: 24.2%; } 
+#tuer-4 { top: 32%; left: 52%; width: 16.1%; height: 13.35%; } 
+#tuer-5 { top: 54%; left: 36%; width: 7.4%; height: 13%; } 
+#tuer-6 { top: 19%; left: 68.2%; width: 13.8%; height: 18%; } 
+#tuer-7 { top: 20%; left: 8.2%; width: 12%; height: 10.7%; } 
+#tuer-8 { top: 77.1%; left: 43.5%; width: 17.2%; height: 14.6%; } 
+#tuer-9 { top: 48.2%; left: 28%; width: 7.8%; height: 18.6%; } 
+#tuer-10 { top: 19.9%; left: 20.7%; width: 15.1%; height: 10.7%; } 
+#tuer-11 { top: 65.5%; left: 43.4%; width: 17.1%; height: 11.4%; } 
+#tuer-12 { top: 45.5%; left: 52%; width: 8.6%; height: 7.7%; } 
+#tuer-13 { top: 81.2%; left: 21.3%; width: 22%; height: 10.5%; } 
+#tuer-14 { top: 48.3%; left: 8.4%; width: 18.5%; height: 18.6%; } 
+#tuer-15 { top: 67%; left: 21.3%; width: 22%; height: 14%; } 
+#tuer-16 { top: 19%; left: 36.2%; width: 15.7%; height: 22%; } 
+#tuer-17 { top: 19%; left: 82.2%; width: 9%; height: 18%; } 
+#tuer-18 { top: 45.6%; left: 61%; width: 14%; height: 11.6%; } 
+#tuer-19 { top: 41.5%; left: 36.2%; width: 15.8%; height: 12.3%; } 
+#tuer-20 { top: 57.5%; left: 61%; width: 30.4%; height: 10%; } 
+#tuer-21 { top: 54%; left: 43.5%; width: 17.1%; height: 11.3%; } 
+#tuer-22 { top: 19%; left: 52.2%; width: 16%; height: 12.8%; } 
+#tuer-23 { top: 37.2%; left: 68.3%; width: 23.1%; height: 8%; } 
+#tuer-24 { top: 67.7%; left: 61%; width: 30.4%; height: 24%; } 
+
+
+/* --- ZUSTÄNDE --- */
+
+.tuer:not(.gesperrt):hover { 
+    opacity: 0.9;
+    transform: none; 
+}
+
+.tuer.gesperrt {
+    cursor: not-allowed;
+    filter: brightness(0.7); 
+}
+
+.tuer.geoeffnet {
+    cursor: pointer; 
+    opacity: 0; /* Türchen wird unsichtbar (geht auf) */
+}
+
+
+/* --- Stile für das Modal (Popup-Fenster) --- */
+.modal {
+    display: none; 
+    position: fixed; 
+    z-index: 100; 
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; 
+    background-color: rgba(0, 0, 0, 0.8); 
+}
+
+.modal-inhalt {
+    background-color: #fefefe; 
+    margin: 10% auto; 
+    padding: 25px;
+    border: 5px solid var(--tuer-gruen); 
+    width: 80%;
+    max-width: 600px;
+    position: relative;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+    animation: fadeIn 0.3s;
+}
+
+.schliessen-btn {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.schliessen-btn:hover,
+.schliessen-btn:focus {
+    color: #333;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+@keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+#modal-titel {
+    color: var(--nummern-schild);
+    text-align: center;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+}
+
+#modal-text {
+    line-height: 1.6;
+    color: #333;
+    margin-top: 20px;
+}
