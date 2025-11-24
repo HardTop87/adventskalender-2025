@@ -157,8 +157,8 @@ document.addEventListener('DOMContentLoaded', () => {
         modalText.innerHTML = inhalte[nummer][aktuelleSprache] || inhalte[nummer]['de'] || 'Content missing.';
         
         // Navigationsbuttons aktualisieren
-        navPrev.style.display = (nummer > 1) ? 'block' : 'none';
-        navNext.style.display = (nummer < 24) ? 'block' : 'none';
+        navPrev.style.display = (nummer > 1) ? 'flex' : 'none';
+        navNext.style.display = (nummer < 24) ? 'flex' : 'none';
         
         modal.style.display = 'block';
     }
