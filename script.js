@@ -6,15 +6,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalTitel = document.getElementById('modal-titel');
     const modalText = document.getElementById('modal-text');
     const flaggen = document.querySelectorAll('.flag-icon');
+    const navPrev = document.getElementById('nav-prev');
+    const navNext = document.getElementById('nav-next');
     
-    // Datum
-    const jetzt = new Date();
-    const aktuellerMonat = jetzt.getMonth() + 1; 
-    const aktuellerTag = jetzt.getDate();
+    let aktuellesTuerchen = 1;
     
-    // *** TEST-MODUS (11 = November) ***
-    const TEST_MONAT = 11; 
-    
+    // Datum - nicht mehr benötigt, da alle Türchen verfügbar sind
     const ADVENTSKALENDER_JAHR = 2025; 
 
     // Speicherung
@@ -24,24 +21,24 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- 1. ÜBERSETZUNGEN DEFINIEREN ---
     const TRANSLATIONS = {
         'site_title': {
-            'de': 'Der CoCoCo Adventskalender',
-            'en': 'The CoCoCo Advent Calendar'
+            'de': 'Mein Modern Adventskalender',
+            'en': 'My Modern Advent Calendar'
         },
         'default_content': {
-            'de': 'Herzlichen Glückwunsch! Du hast ein Türchen geöffnet.',
+            'de': 'Herzlichen Glückwunsch! Du hast Türchen geöffnet.',
             'en': 'Congratulations! You have opened a door.'
         },
         'locked_title': {
-            'de': 'Noch nicht verfügbar! 🔒',
+            'de': 'Noch nicht geöffnet! 🔒',
             'en': 'Not yet unlocked! 🔒'
         },
         'locked_wait': {
-            'de': 'Du musst dich noch etwas gedulden. Die Vorfreude ist doch das Schönste! 😊',
-            'en': 'You still have to be patient. The anticipation is the best part! 😊'
+            'de': 'Wir müssen uns noch etwas gedulden. Die Vorfreude ist doch das Schönste! 😊',
+            'en': 'We still have to be patient. The anticipation is the best part! 😊'
         },
         'month_name': {
-            'de': 'November', 
-            'en': 'November'
+            'de': 'Dezember', 
+            'en': 'December'
         }
     };
     
@@ -147,87 +144,41 @@ document.addEventListener('DOMContentLoaded', () => {
     const geoeffneteTueren = ladeGeoeffneteTueren();
 
     function zeigeTuerchenInhalt(nummer, inhalte) {
+        aktuellesTuerchen = nummer;
         modalTitel.textContent = `Türchen ${nummer}`;
         modalText.innerHTML = inhalte[nummer][aktuelleSprache] || inhalte[nummer]['de'] || 'Content missing.';
+        
+        // Navigationsbuttons aktualisieren
+        navPrev.style.display = (nummer > 1) ? 'block' : 'none';
+        navNext.style.display = (nummer < 24) ? 'block' : 'none';
+        
         modal.style.display = 'block';
     }
 
 
-    // --- 4. LOGIK ZUR DATUMSKONTROLLE UND KLICK-HANDLER ---
+    // --- 4. KLICK-HANDLER FÜR TÜRCHEN (alle Türchen sind verfügbar) ---
 
     tuerElemente.forEach(tuer => {
         const tuerID = tuer.id;
         const nummer = parseInt(tuerID.split('-')[1]);
         
-        // DATUMSKONTROLLE
-        const istTestMonat = (aktuellerMonat === TEST_MONAT && jetzt.getFullYear() === ADVENTSKALENDER_JAHR);
-        
-        let istGesperrt = true;
-
-        if (istTestMonat) {
-            // Im November-Testmodus ist gesperrt, wenn die Türchennummer > aktueller Tag ist.
-            istGesperrt = (nummer > aktuellerTag);
-        } else {
-            istGesperrt = !geoeffneteTueren[tuerID]; 
-        }
-
-        // Klassen auf .tuer anwenden
+        // Markiere bereits geöffnete Türchen
         if (geoeffneteTueren[tuerID]) {
             tuer.classList.add('geoeffnet');
-            tuer.classList.remove('gesperrt'); 
-            istGesperrt = false;
         }
-        
-        if (istGesperrt) {
-            tuer.classList.add('gesperrt');
-        }
-
 
         // --- EVENT-LISTENER FÜR TÜRCCHEN-KLICK ---
         tuer.addEventListener('click', () => {
             const istBereitsGeoeffnet = tuer.classList.contains('geoeffnet');
             
-            if (istBereitsGeoeffnet) {
-                zeigeTuerchenInhalt(nummer, tuerchenInhalte);
-                return;
-            }
-
-            // Logik für GESPERRTE Türchen (Sperr-Nachricht im Modal)
-            if (tuer.classList.contains('gesperrt')) {
-                const monatsName = TRANSLATIONS['month_name'][aktuelleSprache];
-                
-                modalTitel.textContent = TRANSLATIONS['locked_title'][aktuelleSprache];
-                
-                // Erstellt die übersetzte Nachricht
-                let lockedMsg;
-                if (aktuelleSprache === 'en') {
-                    const suffix = getNumberSuffix(nummer);
-                    lockedMsg = `Door **${nummer}** will open on the **${nummer}${suffix} of ${monatsName}**!`;
-                } else {
-                    lockedMsg = `Das Türchen **${nummer}** öffnet sich erst am **${nummer}. ${monatsName}**!`;
-                }
-
-                modalText.innerHTML = `
-                    <p style="text-align: center; font-size: 1.2em; color: #a00;">
-                        ${lockedMsg}
-                    </p>
-                    <p style="text-align: center;">
-                        ${TRANSLATIONS['locked_wait'][aktuelleSprache]}
-                    </p>
-                `;
-                
-                modal.style.display = 'block';
-                return; 
-            }
-
-            // --- REGULÄRER ERSTÖFFNUNGSVORGANG ---
-            
+            // Zeige den Inhalt
             zeigeTuerchenInhalt(nummer, tuerchenInhalte);
 
-            tuer.classList.add('geoeffnet');
-            tuer.classList.remove('gesperrt');
-            speichereGeoeffneteTuer(tuerID, geoeffneteTueren);
-            
+            // Markiere als geöffnet, falls noch nicht geschehen
+            if (!istBereitsGeoeffnet) {
+                tuer.classList.add('geoeffnet');
+                speichereGeoeffneteTuer(tuerID, geoeffneteTueren);
+            }
         });
     });
 
@@ -236,4 +187,40 @@ document.addEventListener('DOMContentLoaded', () => {
     schliessenBtn.addEventListener('click', () => { modal.style.display = 'none'; });
     window.addEventListener('click', (event) => { if (event.target === modal) { modal.style.display = 'none'; } });
     document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && modal.style.display === 'block') { modal.style.display = 'none'; } });
+
+    // --- 6. NAVIGATIONS-LOGIK FÜR PFEILE ---
+    navPrev.addEventListener('click', () => {
+        if (aktuellesTuerchen > 1) {
+            const neueTuernummer = aktuellesTuerchen - 1;
+            const neueTuer = document.getElementById(`tuer-${neueTuernummer}`);
+            if (neueTuer && !neueTuer.classList.contains('geoeffnet')) {
+                neueTuer.classList.add('geoeffnet');
+                speichereGeoeffneteTuer(`tuer-${neueTuernummer}`, geoeffneteTueren);
+            }
+            zeigeTuerchenInhalt(neueTuernummer, tuerchenInhalte);
+        }
+    });
+
+    navNext.addEventListener('click', () => {
+        if (aktuellesTuerchen < 24) {
+            const neueTuernummer = aktuellesTuerchen + 1;
+            const neueTuer = document.getElementById(`tuer-${neueTuernummer}`);
+            if (neueTuer && !neueTuer.classList.contains('geoeffnet')) {
+                neueTuer.classList.add('geoeffnet');
+                speichereGeoeffneteTuer(`tuer-${neueTuernummer}`, geoeffneteTueren);
+            }
+            zeigeTuerchenInhalt(neueTuernummer, tuerchenInhalte);
+        }
+    });
+
+    // Tastatur-Navigation (Pfeiltasten)
+    document.addEventListener('keydown', (event) => {
+        if (modal.style.display === 'block') {
+            if (event.key === 'ArrowLeft' && aktuellesTuerchen > 1) {
+                navPrev.click();
+            } else if (event.key === 'ArrowRight' && aktuellesTuerchen < 24) {
+                navNext.click();
+            }
+        }
+    });
 });
