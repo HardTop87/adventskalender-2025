@@ -29,7 +29,7 @@ body {
     /* NEU: Abstand UNTER dem Switcher zum Kalender */
     margin-bottom: 20px; 
     
-    z-index: 101; 
+    z-index: 1000;  /* Über dem Modal (Modal hat z-index: 100) */
     background-color: rgba(255, 255, 255, 0.8);  /* 🎨 FARBE: Hintergrund Sprachwechsler */
     padding: 5px 10px;
     border-radius: 5px;
@@ -38,6 +38,9 @@ body {
     /* Stellt sicher, dass die Flaggen zentriert sind */
     display: flex; 
     align-items: center;
+    
+    /* Macht den Switcher klickbar auch wenn Modal offen ist */
+    position: relative;
 }
 
 .flag-icon {
