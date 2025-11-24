@@ -72,6 +72,14 @@ document.addEventListener('DOMContentLoaded', () => {
         flaggen.forEach(flag => {
             flag.classList.toggle('active', flag.dataset.lang === lang);
         });
+        
+        // Wenn Modal geöffnet ist, aktualisiere den Inhalt
+        if (modal.style.display === 'block' && aktuellesTuerchen) {
+            modalTitel.textContent = `Türchen ${aktuellesTuerchen}`;
+            modalText.innerHTML = tuerchenInhalte[aktuellesTuerchen][aktuelleSprache] || 
+                                 tuerchenInhalte[aktuellesTuerchen]['de'] || 
+                                 'Content missing.';
+        }
     }
 
     // Event Listener für die Flaggen
