@@ -11,8 +11,6 @@ body {
     font-family: sans-serif; 
     background-color: #FFEFF8;        /* 🎨 FARBE: Hintergrundfarbe der Seite */
     display: flex;
-    /* NEU: Vertikales Layout, um den Switcher ÜBER dem Kalender zu zentrieren */
-    flex-direction: column; 
     justify-content: center;
     align-items: center;
     min-height: 100vh;
@@ -21,26 +19,21 @@ body {
     box-sizing: border-box;
 }
 
-/* ------------------- NEU: Language Switcher Styles ------------------- */
+/* ------------------- Language Switcher Styles ------------------- */
 .language-switcher {
-    /* Positionierung auf zentriert gesetzt, da der Body jetzt flex-direction: column ist */
-    position: static; 
+    position: fixed;           /* Fixiert in der Ecke */
+    top: 20px;                 /* Abstand von oben */
+    right: 20px;               /* Abstand von rechts */
     
-    /* NEU: Abstand UNTER dem Switcher zum Kalender */
-    margin-bottom: 20px; 
+    z-index: 1000;             /* Über dem Modal (Modal hat z-index: 100) */
+    background-color: rgba(255, 255, 255, 0.9);  /* 🎨 FARBE: Hintergrund Sprachwechsler */
+    padding: 8px 12px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);   /* 🎨 FARBE: Schatten Sprachwechsler */
     
-    z-index: 1000;  /* Über dem Modal (Modal hat z-index: 100) */
-    background-color: rgba(255, 255, 255, 0.8);  /* 🎨 FARBE: Hintergrund Sprachwechsler */
-    padding: 5px 10px;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);    /* 🎨 FARBE: Schatten Sprachwechsler */
-    
-    /* Stellt sicher, dass die Flaggen zentriert sind */
     display: flex; 
     align-items: center;
-    
-    /* Macht den Switcher klickbar auch wenn Modal offen ist */
-    position: relative;
+    gap: 5px;
 }
 
 .flag-icon {
@@ -114,7 +107,7 @@ body {
     content: none; 
 }
 
-/* --- ABSOLUTE POSITIONIERUNG DER 24 TÜRCCHEN (DEINE WERTE) --- */
+/* --- ABSOLUTE POSITIONIERUNG DER 24 TÜRCHEN (DEINE WERTE) --- */
 
 #tuer-1 { top: 31.3%; left: 8.4%; width: 27.5%; height: 16.6%; } 
 #tuer-2 { top: 45.6%; left: 75.2%; width: 16.2%; height: 11.6%; } 
@@ -175,19 +168,27 @@ body {
 
 .modal-inhalt {
     background-color: #fefefe;                   /* 🎨 FARBE: Modal-Hintergrund */
-    margin: 10% auto; 
+    margin: 5% auto 5% auto;                     /* Oben 5%, unten 5% für besseres Scrollen */
     padding: 25px;
     border: 5px solid var(--tuer-gruen);         /* 🎨 FARBE: Modal-Rahmen (verwendet Variable) */
     width: 80%;
     max-width: 600px;
+    max-height: 85vh;                            /* Maximale Höhe 85% des Viewports */
+    overflow-y: auto;                            /* Scrollen innerhalb des Modals */
     position: relative;
     border-radius: 10px;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);   /* 🎨 FARBE: Schatten Modal */
     animation: fadeIn 0.3s;
 }
 
+/* Modal mit Bild: Breiter und zweispaltig */
+.modal-inhalt.mit-bild {
+    max-width: 1100px;
+    width: 90%;
+}
+
 .schliessen-btn {
-    color: #aaa;                                 /* 🎨 FARBE: Schließen-Button normal */
+    color: #4D2B41;                                 /* 🎨 FARBE: Schließen-Button normal */
     float: right;
     font-size: 28px;
     font-weight: bold;
@@ -196,7 +197,7 @@ body {
 
 .schliessen-btn:hover,
 .schliessen-btn:focus {
-    color: #333;                                 /* 🎨 FARBE: Schließen-Button beim Hover */
+    color: #FF79C9;                                 /* 🎨 FARBE: Schließen-Button beim Hover */
     text-decoration: none;
     cursor: pointer;
 }
@@ -209,7 +210,7 @@ body {
     gap: 20px;
     margin-top: 30px;
     padding-top: 20px;
-    border-top: 2px solid #eee;                  /* 🎨 FARBE: Trennlinie über Navigation */
+    border-top: 2px solid #1E4947;                  /* 🎨 FARBE: Trennlinie über Navigation */
 }
 
 .nav-btn {
@@ -264,7 +265,7 @@ body {
 #modal-titel {
     color: var(--nummern-schild);                /* 🎨 FARBE: Titel-Farbe (verwendet Variable) */
     text-align: center;
-    border-bottom: 2px solid #eee;               /* 🎨 FARBE: Trennlinie unter Titel */
+    border-bottom: 2px solid #1E4947;               /* 🎨 FARBE: Trennlinie unter Titel */
     padding-bottom: 10px;
 }
 
@@ -272,4 +273,43 @@ body {
     line-height: 1.6;
     color: #4D2B41;                              /* 🎨 FARBE: Text-Farbe im Modal */
     margin-top: 20px;
+}
+
+/* Zweispaltiges Layout wenn Bild vorhanden */
+.mit-bild #modal-text {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+}
+
+.modal-text-spalte {
+    flex: 1;
+    min-width: 0;
+}
+
+.modal-bild-spalte {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Türchen-Bilder */
+.tuerchen-bild {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);  /* 🎨 FARBE: Schatten für Bilder */
+    display: block;
+    object-fit: cover;
+}
+
+/* Responsive: Auf kleinen Bildschirmen einspaltig */
+@media (max-width: 900px) {
+    .mit-bild #modal-text {
+        flex-direction: column;
+    }
+    
+    .modal-inhalt.mit-bild {
+        max-width: 600px;
+        width: 80%;
+    }
 }
